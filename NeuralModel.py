@@ -228,7 +228,7 @@ def NMP(param_batch_features, param_batch_dist, param_batch_distance_expand, par
 
     return retorno
 
-def AtomNeuralNet():
+def AtomNeuralNet(predict_aggregation = 'sum'):
     #### ------------------------------ >>> Neural Network Model <<< ------------------------------------------
     embeddings = tf.matmul(plc_batch_features, Weights_embeddings)
 
@@ -293,8 +293,10 @@ def AtomNeuralNet():
     prediction = tf.multiply(prediction_1, plc_batch_bias)
 
     ### ---->>> Final Aggregation <<<---------------
-    #output = tf.divide(tf.reduce_sum(prediction, axis=1), tf.reduce_sum(plc_batch_bias, axis=1)) #mean
-    output = tf.reduce_sum(prediction, axis=1)
+    if predict_aggregation == 'sum':
+       output = tf.reduce_sum(prediction, axis=1)
+    else:
+       output = tf.divide(tf.reduce_sum(prediction, axis=1), tf.reduce_sum(plc_batch_bias, axis=1)) #mean
 
     return output
 
